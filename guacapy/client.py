@@ -20,7 +20,7 @@ class Guacamole():
         self.username = username
         self.password = password
         self.verify = verify
-        auth = self.__authenticate()
+        auth = self._authenticate()
         assert 'authToken' in auth, 'Failed to retrieve auth token'
         assert 'dataSource' in auth, 'Failed to retrieve primaray data source'
         assert 'availableDataSources' in auth, 'Failed to retrieve data sources'
@@ -35,7 +35,7 @@ class Guacamole():
             self.primary_datasource = auth['dataSource']
         self.token = auth['authToken']
 
-    def __authenticate(self):
+    def _authenticate(self):
         r = requests.post(
             url=self.REST_API + '/tokens',
             data={'username': self.username, 'password': self.password},
@@ -45,7 +45,7 @@ class Guacamole():
         r.raise_for_status()
         return r.json()
 
-    def __auth_request(self, method, url, payload=None, url_params=None,
+    def _auth_request(self, method, url, payload=None, url_params=None,
                        json_response=True):
         params = [('token', self.token)]
         if url_params:
@@ -82,7 +82,7 @@ class Guacamole():
             ('permission', 'UPDATE'),
             ('permission', 'DELETE'),
         ]
-        return self.__auth_request(
+        return self._auth_request(
             method='GET',
             url='{}/data/{}/connectionGroups/ROOT/tree'.format(
                 self.REST_API, datasource
@@ -93,7 +93,7 @@ class Guacamole():
     def get_active_connections(self, datasource=None):
         if not datasource:
             datasource=self.primary_datasource
-        return self.__auth_request(
+        return self._auth_request(
             method='GET',
             url='{}/data/{}/activeConnections'.format(
                 self.REST_API, datasource
@@ -103,7 +103,7 @@ class Guacamole():
     def get_connection(self, connection_id, datasource=None):
         if not datasource:
             datasource=self.primary_datasource
-        return self.__auth_request(
+        return self._auth_request(
             method='GET',
             url='{}/data/{}/connections/{}'.format(
                 self.REST_API, datasource, connection_id
@@ -113,7 +113,7 @@ class Guacamole():
     def get_connection_parameters(self, connection_id, datasource=None):
         if not datasource:
             datasource=self.primary_datasource
-        return self.__auth_request(
+        return self._auth_request(
             method='GET',
             url='{}/data/{}/connections/{}/parameters'.format(
                 self.REST_API, datasource, connection_id
@@ -206,7 +206,7 @@ class Guacamole():
         '''
         if not datasource:
             datasource=self.primary_datasource
-        return self.__auth_request(
+        return self._auth_request(
             method='POST',
             url='{}/data/{}/connections'.format(
                 self.REST_API,
@@ -256,7 +256,7 @@ class Guacamole():
         '''
         if not datasource:
             datasource=self.primary_datasource
-        return self.__auth_request(
+        return self._auth_request(
             method='PUT',
             url='{}/data/{}/connections/{}'.format(
                 self.REST_API,
@@ -269,7 +269,7 @@ class Guacamole():
     def delete_connection(self, connection_id, datasource=None):
         if not datasource:
             datasource = self.primary_datasource
-        return self.__auth_request(
+        return self._auth_request(
             method='DELETE',
             url='{}/data/{}/connections/{}'.format(
                 self.REST_API,
@@ -318,7 +318,7 @@ class Guacamole():
         '''
         if not datasource:
             datasource = self.primary_datasource
-        return self.__auth_request(
+        return self._auth_request(
             method='POST',
             url='{}/data/{}/connectionGroups'.format(
                 self.REST_API,
@@ -339,7 +339,7 @@ class Guacamole():
         '''
         if not datasource:
             datasource = self.primary_datasource
-        return self.__auth_request(
+        return self._auth_request(
             method='PUT',
             url='{}/data/{}/connectionGroups'.format(
                 self.REST_API,
@@ -351,7 +351,7 @@ class Guacamole():
     def delete_connection_group(self, connection_group_id, datasource=None):
         if not datasource:
             datasource = self.primary_datasource
-        return self.__auth_request(
+        return self._auth_request(
             method='DELETE',
             url='{}/data/{}/connectionGroups/{}'.format(
                 self.REST_API,
@@ -363,7 +363,7 @@ class Guacamole():
     def get_users(self, datasource=None):
         if not datasource:
             datasource = self.primary_datasource
-        return self.__auth_request(
+        return self._auth_request(
             method='GET',
             url='{}/data/{}/users'.format(
                 self.REST_API,
@@ -389,7 +389,7 @@ class Guacamole():
         '''
         if not datasource:
             datasource=self.primary_datasource
-        return self.__auth_request(
+        return self._auth_request(
             method='POST',
             url='{}/data/{}/users'.format(
                 self.REST_API,
@@ -401,7 +401,7 @@ class Guacamole():
     def get_user(self, username, datasource=None):
         if not datasource:
             datasource=self.primary_datasource
-        return self.__auth_request(
+        return self._auth_request(
             method='GET',
             url='{}/data/{}/users/{}'.format(
                 self.REST_API,
@@ -413,7 +413,7 @@ class Guacamole():
     def delete_user(self, username, datasource=None):
         if not datasource:
             datasource = self.primary_datasource
-        return self.__auth_request(
+        return self._auth_request(
             method='DELETE',
             url='{}/data/{}/users/{}'.format(
                 self.REST_API,
@@ -425,7 +425,7 @@ class Guacamole():
     def get_permissions(self, username, datasource=None):
         if not datasource:
             datasource = self.primary_datasource
-        return self.__auth_request(
+        return self._auth_request(
             method='GET',
             url='{}/data/{}/users/{}/permissions'.format(
                 self.REST_API,
@@ -441,7 +441,7 @@ class Guacamole():
         '''
         if not datasource:
             datasource = self.primary_datasource
-        return self.__auth_request(
+        return self._auth_request(
             method='PATCH',
             url='{}/data/{}/users/{}/permissions'.format(
                 self.REST_API,
