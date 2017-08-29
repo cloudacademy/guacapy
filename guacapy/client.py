@@ -100,6 +100,17 @@ class Guacamole():
             )
         )
 
+    def kill_connection(self, payload, datasource=None):
+        if not datasource:
+            datasource=self.primary_datasource
+        return self._auth_request(
+            method='PATCH',
+            url='{}/session/data/{}/activeConnections'.format(
+                self.REST_API, datasource
+            ),
+            payload=payload,
+        )
+
     def get_connection(self, connection_id, datasource=None):
         if not datasource:
             datasource=self.primary_datasource
