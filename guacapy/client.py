@@ -4,13 +4,8 @@
 from __future__ import unicode_literals
 from __future__ import print_function
 from simplejson.scanner import JSONDecodeError
-import logging
 import re
 import requests
-
-
-logging.basicConfig(level=logging.DEBUG)
-logger = logging.getLogger(__name__)
 
 
 class Guacamole():
@@ -50,11 +45,7 @@ class Guacamole():
         params = [('token', self.token)]
         if url_params:
             params += url_params
-        logger.debug(
-            '{method} {url} - Params: {params}- Payload: {payload}'.format(
-                method=method, url=url, params=params, payload=payload
-            )
-        )
+
         r = requests.request(
             method=method,
             url=url,
@@ -63,14 +54,11 @@ class Guacamole():
             verify=self.verify,
             allow_redirects=True
         )
-        if not r.ok:
-            logger.error(r.content)
         r.raise_for_status()
         if json_response:
             try:
                 return r.json()
             except JSONDecodeError:
-                logger.error('Could not decode JSON response')
                 return r
         else:
             return r
@@ -167,10 +155,6 @@ class Guacamole():
         '''
         cons = self.get_connections(datasource)
         res = self.__get_connection_by_name(cons, name, regex)
-        if not res:
-            logger.error(
-                'Could not find connection named {}'.format(name)
-            )
         return res
 
 
