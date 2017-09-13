@@ -15,6 +15,7 @@ class Guacamole():
         self.username = username
         self.password = password
         self.verify = verify
+        self.session = requests.Session()
         auth = self._authenticate()
         assert 'authToken' in auth, 'Failed to retrieve auth token'
         assert 'dataSource' in auth, 'Failed to retrieve primaray data source'
@@ -31,7 +32,8 @@ class Guacamole():
         self.token = auth['authToken']
 
     def _authenticate(self):
-        r = requests.post(
+        r = self.session.request(
+            method='POST',
             url=self.REST_API + '/tokens',
             data={'username': self.username, 'password': self.password},
             verify=self.verify,
@@ -46,7 +48,7 @@ class Guacamole():
         if url_params:
             params += url_params
 
-        r = requests.request(
+        r = self.session.request(
             method=method,
             url=url,
             params=params,
